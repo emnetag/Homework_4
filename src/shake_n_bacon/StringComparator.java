@@ -35,6 +35,18 @@ public class StringComparator implements Comparator<String> {
 	@Override
 	public int compare(String s1, String s2) {
 		// TODO: To-be implemented
-		return 0;
+		
+		if (s1.length() == s2.length()) {
+			for (int i = 0; i < s1.length(); i++) {
+				if (s1.charAt(i) > s2.charAt(i)) {
+					return 1;
+				} else {
+					return -1; 
+				}
+			}
+			return 0;
+		} else {
+			return s1.length() - s2.length();
+		}
 	}
 }
