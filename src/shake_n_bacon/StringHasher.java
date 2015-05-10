@@ -11,7 +11,7 @@ import providedCode.Hasher;
 public class StringHasher implements Hasher {
 
 	public static final int INITAL_HASH_VAL = 7;
-	public static final int PRIME_HASH_NUM = 31;
+	public static final int PRIME_HASH_NUM = 7;
 
 	/**
 	 * TODO Replace this comment with your own as appropriate.

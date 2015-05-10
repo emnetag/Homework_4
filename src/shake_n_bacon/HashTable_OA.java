@@ -52,7 +52,8 @@ public class HashTable_OA extends DataCounter {
 
 	@Override
 	public void incCount(String data) {
-		
+		System.out.println(data);
+		System.out.println(stringHash.hash(data));
 	
 		// TODO Auto-generated method stub
 	}
