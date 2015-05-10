@@ -39,13 +39,21 @@ import providedCode.*;
  *        TODO: Develop appropriate tests for your HashTable.
  */
 public class HashTable_OA extends DataCounter {
+	Comparator<String> stringComp;
+	Hasher stringHash;
+	DataCount[] stringTable; 
 
+	//we will do linear probing
 	public HashTable_OA(Comparator<String> c, Hasher h) {
-		// TODO: To-be implemented
+		stringComp = c;
+		stringHash = h;
+		stringTable = new DataCount[8]; 
 	}
 
 	@Override
 	public void incCount(String data) {
+		
+	
 		// TODO Auto-generated method stub
 	}
 
@@ -63,8 +71,24 @@ public class HashTable_OA extends DataCounter {
 
 	@Override
 	public SimpleIterator getIterator() {
-		// TODO Auto-generated method stub
-		return null;
+		class Itr implements SimpleIterator {
+
+			@Override
+			public DataCount next() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			@Override
+			public boolean hasNext() {
+				// TODO Auto-generated method stub
+				return false;
+			}
+			
+		}
+		
+		SimpleIterator itr = new Itr();
+		return itr;
 	}
 
 }

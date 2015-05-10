@@ -34,13 +34,19 @@ import providedCode.*;
  *        TODO: Develop appropriate tests for your HashTable.
  */
 public class HashTable_SC extends DataCounter {
+	Comparator<String> stringComp;
+	Hasher stringHash;
+	String[] stringTable; 
 
 	public HashTable_SC(Comparator<String> c, Hasher h) {
-		// TODO: To-be implemented
+		stringComp = c;
+		stringHash = h;
+		stringTable = new String[8]; // 0- 7
 	}
 
 	@Override
 	public void incCount(String data) {
+		
 		// TODO Auto-generated method stub
 	}
 
@@ -58,7 +64,24 @@ public class HashTable_SC extends DataCounter {
 
 	@Override
 	public SimpleIterator getIterator() {
-		return null;
+		class Itr implements SimpleIterator {
+
+			@Override
+			public DataCount next() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			@Override
+			public boolean hasNext() {
+				// TODO Auto-generated method stub
+				return false;
+			}
+			
+		}
+		
+		SimpleIterator itr = new Itr();
+		return itr;
 	}
 
 }
