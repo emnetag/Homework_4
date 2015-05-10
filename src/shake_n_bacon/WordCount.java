@@ -2,6 +2,8 @@ package shake_n_bacon;
 
 import java.io.IOException;
 
+import javax.management.monitor.CounterMonitor;
+
 import providedCode.*;
 
 /**
@@ -14,10 +16,15 @@ public class WordCount {
 	// Implement a method that returns an array of DataCount objects
 	// containing each unique word.
 	private static DataCount[] getCountsArray(DataCounter counter) {
+		// SO what happens here is that it is using the methods from whatever counter it is using now(-o or -s)
+		// It will not work now, but it will work after implementing the hashtables
 		DataCount[] dCount = new DataCount[counter.getSize()];
-		
-		
-		
+		int i = 0;
+		while(counter.getIterator().hasNext()) {
+			dCount[i] = counter.getIterator().next();
+			++i;
+		}
+		return dCount;
 	}
 
 	// ////////////////////////////////////////////////////////////////////////
