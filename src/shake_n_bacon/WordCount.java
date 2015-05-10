@@ -16,8 +16,6 @@ public class WordCount {
 	// Implement a method that returns an array of DataCount objects
 	// containing each unique word.
 	private static DataCount[] getCountsArray(DataCounter counter) {
-		// SO what happens here is that it is using the methods from whatever counter it is using now(-o or -s)
-		// It will not work now, but it will work after implementing the hashtables
 		DataCount[] dCount = new DataCount[counter.getSize()];
 		int i = 0;
 		while(counter.getIterator().hasNext()) {

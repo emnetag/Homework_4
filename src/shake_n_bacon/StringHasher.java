@@ -15,7 +15,11 @@ public class StringHasher implements Hasher {
 	 */
 	@Override
 	public int hash(String str) {
-		// TODO Auto-generated method stub
-		return 0;
+		int hash = 7;
+		int primeNum = 31;
+		for(int i = 0; i < str.length(); i++) {
+			hash = hash*primeNum + str.charAt(i);
+		}
+		return hash;
 	}
 }
