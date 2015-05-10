@@ -26,6 +26,5 @@ public class DataCount {
 	public DataCount(String data, int count) {
 		this.data = data;
 		this.count = count;
-		
 	}
 }
