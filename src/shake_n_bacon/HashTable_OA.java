@@ -41,8 +41,7 @@ import providedCode.*;
 public class HashTable_OA extends DataCounter {
 	Comparator<String> stringComp;
 	Hasher stringHash;
-	DataCount[] stringTable; 
-	int numOfElements;
+	DataCount[] stringTable;
 	int sizeMult;
 	int numOfUnique;
 	
@@ -52,25 +51,43 @@ public class HashTable_OA extends DataCounter {
 		stringTable = new DataCount[86311]; 
 		sizeMult = 0;
 		numOfUnique = 0;
-		numOfElements = 0;
 	}
 
 	@Override
 	public void incCount(String data) {
 		if (numOfUnique / stringTable.length > 0.5) {
-			resize();
+			int[] primeNum = new int[]{164233, 331523};
+			
+			if (sizeMult == primeNum.length) {
+				System.out.println("Maximum size reached");
+				System.exit(0);
+			}
+			
+			DataCount[] temp = new DataCount[primeNum[sizeMult]];
+			sizeMult++;
+			numOfUnique = 0;
+			for(int i = 0; i < stringTable.length; i++) {
+				if(stringTable[i] != null) {
+					DataCount dCount = stringTable[i];
+				    int index = insert(dCount.data, temp);
+					temp[index].count = dCount.count;
+				}
+			}
+			stringTable = temp;
 		}
 		insert(data, stringTable);
 	}
 	
-	private void insert(String data, DataCount[] arr) {
+	private int insert(String data, DataCount[] arr) {
 		int index = stringHash.hash(data) % arr.length;
 	
 		if(arr[index] == null) {
 			arr[index] = new DataCount(data, 1);
 			numOfUnique++;
+//			System.out.println("insert new");
 		} else if(stringComp.compare(arr[index].data, data) == 0) {
 			arr[index].count++;
+//			System.out.println("counter plus");
 		} else {
 			int i = index;
 			while(arr[i] != null) {
@@ -78,33 +95,16 @@ public class HashTable_OA extends DataCounter {
 			}
 			arr[i] = new DataCount(data, 1);
 			numOfUnique++;
+//			System.out.println("probing");
 		}
-		numOfElements++;
-	}
-	
-	private void resize() {
-		int[] primeNum = new int[]{164233, 331523};
-		
-		if (sizeMult == primeNum.length) {
-			System.out.println("Maximum size reached");
-			System.exit(0);
-		}
-		
-		DataCount[] temp = new DataCount[primeNum[sizeMult]];
-		sizeMult++;
-		numOfUnique = 0;
-		numOfElements = 0;
-		for (int i = 0; i < stringTable.length; i++) {
-			DataCount dCount = stringTable[i];
-			for (int j = 0; j < dCount.count; j++) {
-				insert(dCount.data, temp);
-			}
-		}
-		stringTable = temp;
+		System.out.println(data);
+		System.out.println(arr[index].count);
+		return index;
 	}
 
 	@Override
 	public int getSize() {
+		System.out.println(numOfUnique);
 		return numOfUnique;
 	}
 

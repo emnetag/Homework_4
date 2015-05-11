@@ -25,7 +25,6 @@ public class StringHasher implements Hasher {
 		if(hash < 0) {
 			hash = Math.abs(hash);
 		}
-//		System.out.println(hash);
 		return hash;
 	}
 }
