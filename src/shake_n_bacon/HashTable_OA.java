@@ -1,5 +1,7 @@
 package shake_n_bacon;
 
+import java.util.NoSuchElementException;
+
 import providedCode.*;
 
 /**
@@ -94,12 +96,20 @@ public class HashTable_OA extends DataCounter {
 		sizeMult++;
 		numOfUnique = 0;
 		numOfElements = 0;
+		SimpleIterator itr = this.getIterator();
+		while (itr.hasNext()) {
+			DataCount dCount = itr.next();
+			for (int j = 0; j < dCount.count; j++) {
+				insert(dCount.data, temp);
+			}
+		}
+		/*
 		for (int i = 0; i < stringTable.length; i++) {
 			DataCount dCount = stringTable[i];
 			for (int j = 0; j < dCount.count; j++) {
 				insert(dCount.data, temp);
 			}
-		}
+		}*/
 		stringTable = temp;
 	}
 
@@ -119,20 +129,22 @@ public class HashTable_OA extends DataCounter {
 	}
 
 	@Override
-	public SimpleIterator getIterator() {
-		//im still a bit not sure on what should I do here.
+	public SimpleIterator getIterator() throws NoSuchElementException {
 		return new SimpleIterator(){
-
+			int startIndex = -1;
 			@Override
 			public DataCount next() {
-				// TODO Auto-generated method stub
-				return null;
+				if (!this.hasNext()) {
+					throw new NoSuchElementException();
+				}
+				startIndex++;
+				return stringTable[startIndex];
 			}
 
 			@Override
 			public boolean hasNext() {
 				// TODO Auto-generated method stub
-				return false;
+				return stringTable[startIndex + 1] != null;
 			}
 			
 		};
