@@ -44,6 +44,7 @@ public class HashTable_OA extends DataCounter {
 	DataCount[] stringTable; 
 	int numOfElements;
 	int sizeMult;
+	int numOfUnique;
 	
 	public HashTable_OA(Comparator<String> c, Hasher h) {
 		stringComp = c;
@@ -51,58 +52,64 @@ public class HashTable_OA extends DataCounter {
 		stringTable = new DataCount[86311]; 
 		numOfElements = 0;
 		sizeMult = 0;
+		numOfUnique = 0;
 	}
 
 	@Override
 	public void incCount(String data) {
 		int[] primeNum = new int[]{164233, 331523};
-		
+		if(sizeMult == primeNum.length) {
+			System.out.println("Maximum size reached");
+			System.exit(0);
+		}
 		if(numOfElements / stringTable.length > 0.5) {
+			numOfUnique = 0;
 			DataCount[] temp = new DataCount[primeNum[sizeMult]];
 			sizeMult++;
 			for(int i = 0; i < stringTable.length; i++) {
 				insert(data, temp);
 			}
+			stringTable = temp;
 		} 
 		insert(data, stringTable);
-
 		numOfElements++; 
 	}
 	
 	private void insert(String data, DataCount[] arr) {
 		int index = stringHash.hash(data) % arr.length;
-		System.out.println(arr[index] == null);
+		
 		if(arr[index] == null) {
 			arr[index] = new DataCount(data, 1);
-			System.out.println("inserted new");
+			numOfUnique++;
 		} else if(stringComp.compare(arr[index].data, data) == 0) {
 			arr[index].count++;
-			System.out.println("same word");
 		} else {
 			int i = index;
-			while(arr[i] == null) {
+			while(arr[i] != null) {
 				i = (i + 1) % arr.length;
 			}
 			arr[i] = new DataCount(data, 1);
-			System.out.println("probing");
+			numOfUnique++;
 		}
-		
+
 	}
 
 	@Override
 	public int getSize() {
-		// TODO Auto-generated method stub
+		//this is not working./ :(
 		return 0;
+//		return numOfUnique;
 	}
 
 	@Override
 	public int getCount(String data) {
-		// TODO Auto-generated method stub
-		return 0;
+		int index = stringHash.hash(data) % stringTable.length;
+		return stringTable[index].count;
 	}
 
 	@Override
 	public SimpleIterator getIterator() {
+		//im still a bit not sure on what should I do here.
 		return new SimpleIterator(){
 
 			@Override
