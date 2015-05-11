@@ -18,8 +18,9 @@ public class WordCount {
 	private static DataCount[] getCountsArray(DataCounter counter) {
 		DataCount[] dCount = new DataCount[counter.getSize()];
 		int i = 0;
-		while(counter.getIterator().hasNext()) {
-			dCount[i] = counter.getIterator().next();
+		SimpleIterator itr = counter.getIterator();
+		while(itr.hasNext()) {
+			dCount[i] = itr.next();
 			++i;
 		}
 		return dCount;

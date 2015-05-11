@@ -50,7 +50,7 @@ public class HashTable_OA extends DataCounter {
 	public HashTable_OA(Comparator<String> c, Hasher h) {
 		stringComp = c;
 		stringHash = h;
-		stringTable = new DataCount[86311]; 
+		stringTable = new DataCount[86311]; //86311
 		sizeMult = 0;
 		numOfUnique = 0;
 	}
@@ -105,7 +105,6 @@ public class HashTable_OA extends DataCounter {
 	
 	@Override
 	public int getSize() {
-		System.out.println(numOfUnique);
 		return numOfUnique;
 	}
 
@@ -122,20 +121,26 @@ public class HashTable_OA extends DataCounter {
 	@Override
 	public SimpleIterator getIterator() throws NoSuchElementException {
 		return new SimpleIterator(){
-			int startIndex = -1;
+			int startIndex = 0;
+			int elementsOut = 0;
 			@Override
 			public DataCount next() {
 				if (!this.hasNext()) {
 					throw new NoSuchElementException();
 				}
+				while(stringTable[startIndex] == null) {
+					startIndex++;
+				}
+				DataCount temp = stringTable[startIndex];
 				startIndex++;
-				return stringTable[startIndex];
+				elementsOut++;
+				return temp;
 			}
 
 			@Override
 			public boolean hasNext() {
 				// TODO Auto-generated method stub
-				return stringTable[startIndex + 1] != null;
+				return startIndex < stringTable.length && (elementsOut < numOfUnique);
 			}
 			
 		};
