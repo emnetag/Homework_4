@@ -11,7 +11,7 @@ import providedCode.Hasher;
 public class StringHasher implements Hasher {
 
 	public static final int INITAL_HASH_VAL = 7;
-	public static final int PRIME_HASH_NUM = 7;
+	public static final int PRIME_HASH_NUM = 31;
 
 	/**
 	 * TODO Replace this comment with your own as appropriate.
@@ -20,8 +20,12 @@ public class StringHasher implements Hasher {
 	public int hash(String str) {
 		int hash = INITAL_HASH_VAL;	
 		for(int i = 0; i < str.length(); i++) {
-			hash = hash * PRIME_HASH_NUM + str.charAt(i);
+			hash += hash * PRIME_HASH_NUM + str.charAt(i);
 		}
+		if(hash < 0) {
+			hash = Math.abs(hash);
+		}
+//		System.out.println(hash);
 		return hash;
 	}
 }
