@@ -32,6 +32,7 @@ public class StringComparator implements Comparator<String> {
 	/**
 	 * TODO Replace this comment with your own as appropriate.
 	 */
+	@SuppressWarnings("unused")
 	@Override
 	public int compare(String s1, String s2) {
 		// TODO: To-be implemented
