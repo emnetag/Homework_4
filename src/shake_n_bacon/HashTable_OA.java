@@ -42,20 +42,51 @@ public class HashTable_OA extends DataCounter {
 	Comparator<String> stringComp;
 	Hasher stringHash;
 	DataCount[] stringTable; 
-
-	//we will do linear probing
+	int numOfElements;
+	int sizeMult;
+	
 	public HashTable_OA(Comparator<String> c, Hasher h) {
 		stringComp = c;
 		stringHash = h;
-		stringTable = new DataCount[8]; 
+		stringTable = new DataCount[86311]; 
+		numOfElements = 0;
+		sizeMult = 0;
 	}
 
 	@Override
 	public void incCount(String data) {
-		System.out.println(data);
-		System.out.println(stringHash.hash(data));
+		int[] primeNum = new int[]{164233, 331523};
+		
+		if(numOfElements / stringTable.length > 0.5) {
+			DataCount[] temp = new DataCount[primeNum[sizeMult]];
+			sizeMult++;
+			for(int i = 0; i < stringTable.length; i++) {
+				insert(data, temp);
+			}
+		} 
+		insert(data, stringTable);
+
+		numOfElements++; 
+	}
 	
-		// TODO Auto-generated method stub
+	private void insert(String data, DataCount[] arr) {
+		int index = stringHash.hash(data) % arr.length;
+		System.out.println(arr[index] == null);
+		if(arr[index] == null) {
+			arr[index] = new DataCount(data, 1);
+			System.out.println("inserted new");
+		} else if(stringComp.compare(arr[index].data, data) == 0) {
+			arr[index].count++;
+			System.out.println("same word");
+		} else {
+			int i = index;
+			while(arr[i] == null) {
+				i = (i + 1) % arr.length;
+			}
+			arr[i] = new DataCount(data, 1);
+			System.out.println("probing");
+		}
+		
 	}
 
 	@Override
@@ -72,7 +103,7 @@ public class HashTable_OA extends DataCounter {
 
 	@Override
 	public SimpleIterator getIterator() {
-		class Itr implements SimpleIterator {
+		return new SimpleIterator(){
 
 			@Override
 			public DataCount next() {
@@ -86,10 +117,8 @@ public class HashTable_OA extends DataCounter {
 				return false;
 			}
 			
-		}
-		
-		SimpleIterator itr = new Itr();
-		return itr;
+		};
+	
 	}
 
 }
