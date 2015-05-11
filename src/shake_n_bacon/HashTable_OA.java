@@ -97,8 +97,12 @@ public class HashTable_OA extends DataCounter {
 
 	@Override
 	public int getCount(String data) {
-		// TODO Auto-generated method stub
-		return 0;
+		int index = stringHash.hash(data) % stringTable.length;
+		if (stringTable[index] == null) {
+			return 0;
+		} else {
+			return stringTable[index].count;
+		}		
 	}
 
 	@Override
