@@ -3,10 +3,14 @@ package shake_n_bacon;
 import providedCode.*;
 
 /**
- * @author <name>
- * @UWNetID <uw net id>
- * @studentID <id number>
- * @email <email address>
+ * @author Emnet Gossaye
+ * @author Vincent Joe
+ * @UWNetID emnetg
+ * @UWNetID jonanv
+ * @studentID 1221300
+ * @studentID 1470087
+ * @email emnetg@uw.edu
+ * @email jonanv@uw.edu
  * 
  *        TODO: Replace this comment with your own as appropriate.
  * 
@@ -66,8 +70,14 @@ public class HashTable_SC extends DataCounter {
 					NodeObj curr = stringTable[i];
 					while (curr != null) {
 						int index = insert(curr.dataCount.data, temp);
-						
-						temp[index].dataCount.count = curr.dataCount.count;
+						NodeObj temp2 = temp[index];
+						while (temp2 != null) {
+							if (stringComp.compare(temp2.dataCount.data, curr.dataCount.data) == 0) {
+								temp2.dataCount.count = curr.dataCount.count;
+								break;
+							}
+							temp2 = temp2.next;
+						}
 						curr = curr.next;
 					}
 				}
@@ -75,7 +85,6 @@ public class HashTable_SC extends DataCounter {
 			stringTable = temp;
 		}
 		insert(data, stringTable);
-
 	}
 	
 	private int insert(String data, NodeObj[] arr) {
@@ -83,6 +92,7 @@ public class HashTable_SC extends DataCounter {
 		
 		if (arr[index] == null) {
 			arr[index] = new NodeObj(data);
+			numOfUnique++;
 		} else {
 			NodeObj curr = arr[index];
 			while (curr != null) {
@@ -96,20 +106,32 @@ public class HashTable_SC extends DataCounter {
 			NodeObj temp = new NodeObj(data);
 			temp.next = arr[index];
 			arr[index] = temp;
+			numOfUnique++;
 		}
 		return index;
 	}
 
 	@Override
 	public int getSize() {
-		// TODO Auto-generated method stub
-		return 0;
+		return numOfUnique;
 	}
 
 	@Override
 	public int getCount(String data) {
-		// TODO Auto-generated method stub
-		return 0;
+		int index = stringHash.hash(data) % stringTable.length;
+		
+		if (stringTable[index] == null) {
+			return 0;
+		} else {
+			NodeObj curr = stringTable[index];
+			while (curr != null) {
+				if (stringComp.compare(curr.dataCount.data, data) == 0) {
+					return curr.dataCount.count;
+				}
+				curr = curr.next;
+			}
+			return 0;
+		}
 	}
 
 	@Override
