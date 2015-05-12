@@ -36,18 +36,68 @@ import providedCode.*;
 public class HashTable_SC extends DataCounter {
 	Comparator<String> stringComp;
 	Hasher stringHash;
-	String[] stringTable; 
-
+	NodeObj[] stringTable; 
+	int sizeMult;
+	int numOfUnique;
+	
 	public HashTable_SC(Comparator<String> c, Hasher h) {
 		stringComp = c;
 		stringHash = h;
-		stringTable = new String[8]; // 0- 7
+		stringTable = new NodeObj[8]; // 0- 7
+		numOfUnique = 0;
+		sizeMult = 0;
 	}
 
 	@Override
 	public void incCount(String data) {
+		if (numOfUnique / stringTable.length > 0.5) {
+			int[] primeNum = new int[]{164233, 331523};
+			
+			if (sizeMult == primeNum.length) {
+				System.out.println("Maximum size reached");
+				System.exit(0);
+			}
+			
+			NodeObj[] temp = new NodeObj[primeNum[sizeMult]];
+			sizeMult++;
+			numOfUnique = 0;
+			for (int i = 0; i < stringTable.length; i++) {
+				if (stringTable[i] != null) {
+					NodeObj curr = stringTable[i];
+					while (curr != null) {
+						int index = insert(curr.dataCount.data, temp);
+						
+						temp[index].dataCount.count = curr.dataCount.count;
+						curr = curr.next;
+					}
+				}
+			}
+			stringTable = temp;
+		}
+		insert(data, stringTable);
+
+	}
+	
+	private int insert(String data, NodeObj[] arr) {
+		int index = stringHash.hash(data) % arr.length;
 		
-		// TODO Auto-generated method stub
+		if (arr[index] == null) {
+			arr[index] = new NodeObj(data);
+		} else {
+			NodeObj curr = arr[index];
+			while (curr != null) {
+				if (stringComp.compare(curr.dataCount.data, data) == 0) {
+					curr.dataCount.count++;
+					return index;
+				}
+				curr = curr.next;
+			}
+			
+			NodeObj temp = new NodeObj(data);
+			temp.next = arr[index];
+			arr[index] = temp;
+		}
+		return index;
 	}
 
 	@Override
@@ -64,7 +114,7 @@ public class HashTable_SC extends DataCounter {
 
 	@Override
 	public SimpleIterator getIterator() {
-		class Itr implements SimpleIterator {
+		return new SimpleIterator() {
 
 			@Override
 			public DataCount next() {
@@ -78,10 +128,24 @@ public class HashTable_SC extends DataCounter {
 				return false;
 			}
 			
+		};
+	}
+	
+	
+	public class NodeObj {
+		public NodeObj next;
+		public DataCount dataCount;
+		
+		public NodeObj() {
+			this.dataCount = null;
+			this.next = null;
 		}
 		
-		SimpleIterator itr = new Itr();
-		return itr;
+		public NodeObj(String data) {
+			this.dataCount = new DataCount(data, 1);
+			this.next = null;
+		}
 	}
+	
 
 }
