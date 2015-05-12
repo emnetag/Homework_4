@@ -119,7 +119,7 @@ public class HashTable_OA extends DataCounter {
 	}
 
 	@Override
-	public SimpleIterator getIterator() throws NoSuchElementException {
+	public SimpleIterator getIterator() {
 		return new SimpleIterator(){
 			int startIndex = 0;
 			int elementsOut = 0;
