@@ -41,11 +41,11 @@ import providedCode.*;
  *        TODO: Develop appropriate tests for your HashTable.
  */
 public class HashTable_OA extends DataCounter {
-	Comparator<String> stringComp;
-	Hasher stringHash;
-	DataCount[] stringTable;
-	int sizeMult;
-	int numOfUnique;
+	private Comparator<String> stringComp;
+	private Hasher stringHash;
+	private DataCount[] stringTable;
+	private int sizeMult;
+	private int numOfUnique;
 	
 	public HashTable_OA(Comparator<String> c, Hasher h) {
 		stringComp = c;
@@ -57,7 +57,7 @@ public class HashTable_OA extends DataCounter {
 
 	@Override
 	public void incCount(String data) {
-		if (numOfUnique / stringTable.length > 0.5) {
+		if (numOfUnique / stringTable.length > 1) {
 			int[] primeNum = new int[]{164233, 331523};
 			
 			if (sizeMult == primeNum.length) {
@@ -86,10 +86,8 @@ public class HashTable_OA extends DataCounter {
 		if(arr[index] == null) {
 			arr[index] = new DataCount(data, 1);
 			numOfUnique++;
-//			System.out.println("insert new");
 		} else if(stringComp.compare(arr[index].data, data) == 0) {
 			arr[index].count++;
-//			System.out.println("counter plus");
 		} else {
 			int i = index;
 			while(arr[i] != null) {
@@ -97,9 +95,9 @@ public class HashTable_OA extends DataCounter {
 			}
 			arr[i] = new DataCount(data, 1);
 			numOfUnique++;
-//			System.out.println("probing");
 		}
 		return index;
+		
 	}
 	
 	

@@ -1,5 +1,7 @@
 package shake_n_bacon;
 
+import java.util.NoSuchElementException;
+
 import providedCode.*;
 
 /**
@@ -39,22 +41,22 @@ import providedCode.*;
  */
 public class HashTable_SC extends DataCounter {
 	Comparator<String> stringComp;
-	Hasher stringHash;
-	NodeObj[] stringTable; 
-	int sizeMult;
-	int numOfUnique;
+	private Hasher stringHash;
+	private NodeObj[] stringTable; 
+	private int sizeMult;
+	private int numOfUnique;
 	
 	public HashTable_SC(Comparator<String> c, Hasher h) {
 		stringComp = c;
 		stringHash = h;
-		stringTable = new NodeObj[8]; // 0- 7
+		stringTable = new NodeObj[86311]; // 86311
 		numOfUnique = 0;
 		sizeMult = 0;
 	}
 
 	@Override
 	public void incCount(String data) {
-		if (numOfUnique / stringTable.length > 0.5) {
+		if (numOfUnique / stringTable.length > 1) {
 			int[] primeNum = new int[]{164233, 331523};
 			
 			if (sizeMult == primeNum.length) {
@@ -62,54 +64,75 @@ public class HashTable_SC extends DataCounter {
 				System.exit(0);
 			}
 			
-			NodeObj[] temp = new NodeObj[primeNum[sizeMult]];
+			NodeObj[] arrTemp = new NodeObj[primeNum[sizeMult]];
 			sizeMult++;
 			numOfUnique = 0;
 			for (int i = 0; i < stringTable.length; i++) {
 				if (stringTable[i] != null) {
 					NodeObj curr = stringTable[i];
 					while (curr != null) {
-						int index = insert(curr.dataCount.data, temp);
-						NodeObj temp2 = temp[index];
-						while (temp2 != null) {
-							if (stringComp.compare(temp2.dataCount.data, curr.dataCount.data) == 0) {
-								temp2.dataCount.count = curr.dataCount.count;
-								break;
-							}
-							temp2 = temp2.next;
-						}
-						curr = curr.next;
+						insert(curr, arrTemp);
 					}
-				}
+				}		
 			}
-			stringTable = temp;
+			stringTable = arrTemp;
 		}
-		insert(data, stringTable);
+		insert(new NodeObj(data), stringTable);
 	}
 	
-	private int insert(String data, NodeObj[] arr) {
-		int index = stringHash.hash(data) % arr.length;
+	private void insert(NodeObj aNode, NodeObj[] arr) {
+		int index = stringHash.hash(aNode.dataCount.data) % arr.length;
+		boolean added = false;
 		
 		if (arr[index] == null) {
-			arr[index] = new NodeObj(data);
+			arr[index] = aNode;
 			numOfUnique++;
 		} else {
 			NodeObj curr = arr[index];
-			while (curr != null) {
-				if (stringComp.compare(curr.dataCount.data, data) == 0) {
+			while (curr.next != null) {
+				if (stringComp.compare(curr.dataCount.data, aNode.dataCount.data) == 0) {
 					curr.dataCount.count++;
-					return index;
+					added = true;
+					break;
 				}
 				curr = curr.next;
 			}
-			
-			NodeObj temp = new NodeObj(data);
-			temp.next = arr[index];
-			arr[index] = temp;
-			numOfUnique++;
+			if (stringComp.compare(curr.dataCount.data, aNode.dataCount.data) == 0 && !added) {
+				curr.dataCount.count++;
+			} else{
+				curr.next = aNode;
+				numOfUnique++;
+			}
 		}
-		return index;
+		System.out.println(aNode.dataCount.data);
+		System.out.println(stringTable[index].dataCount.count);
+		System.out.println(numOfUnique);
 	}
+	
+	
+//	private int insert(String data, NodeObj[] arr) {
+//		int index = stringHash.hash(data) % arr.length;
+//		
+//		if (arr[index] == null) {
+//			arr[index] = new NodeObj(data);
+//			numOfUnique++;
+//		} else {
+//			NodeObj curr = arr[index];
+//			while (curr != null) {
+//				if (stringComp.compare(curr.dataCount.data, data) == 0) {
+//					curr.dataCount.count++;
+//					return index;
+//				}
+//				curr = curr.next;
+//			}
+//			
+//			NodeObj temp = new NodeObj(data);
+//			temp.next = arr[index];
+//			arr[index] = temp;
+//			numOfUnique++;
+//		}
+//		return index;
+//	}
 
 	@Override
 	public int getSize() {
@@ -137,17 +160,35 @@ public class HashTable_SC extends DataCounter {
 	@Override
 	public SimpleIterator getIterator() {
 		return new SimpleIterator() {
+			int elementsOut = 0;
+			int index = 0;
+			NodeObj pointer = stringTable[0]; 
 
 			@Override
 			public DataCount next() {
-				// TODO Auto-generated method stub
-				return null;
+				if (!this.hasNext()) {
+					throw new NoSuchElementException();
+				}
+				if( pointer == null || pointer.next == null) {
+					index++;
+					System.out.println("uniqueele = " + numOfUnique);
+					System.out.println("elements out = "+ elementsOut);
+					System.out.println(index);
+					while(stringTable[index] == null) {
+						index++;
+					}
+					pointer = stringTable[index];
+				}
+				NodeObj temp = pointer;
+				pointer = pointer.next;
+				elementsOut++;
+
+				return temp.dataCount;
 			}
 
 			@Override
 			public boolean hasNext() {
-				// TODO Auto-generated method stub
-				return false;
+				return (index < stringTable.length) && (elementsOut < numOfUnique);
 			}
 			
 		};
