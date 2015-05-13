@@ -40,7 +40,7 @@ import providedCode.*;
  *        TODO: Develop appropriate tests for your HashTable.
  */
 public class HashTable_SC extends DataCounter {
-	Comparator<String> stringComp;
+	private Comparator<String> stringComp;
 	private Hasher stringHash;
 	private NodeObj[] stringTable; 
 	private int sizeMult;
