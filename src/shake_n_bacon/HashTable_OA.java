@@ -50,7 +50,7 @@ public class HashTable_OA extends DataCounter {
 	public HashTable_OA(Comparator<String> c, Hasher h) {
 		stringComp = c;
 		stringHash = h;
-		stringTable = new DataCount[86311]; //86311
+		stringTable = new DataCount[5347]; //5347
 		sizeMult = 0;
 		numOfUnique = 0;
 	}
@@ -58,8 +58,8 @@ public class HashTable_OA extends DataCounter {
 	@Override
 	public void incCount(String data) {
 		if (numOfUnique / stringTable.length > 0.5) {
-			int[] primeNum = new int[]{164233, 331523};
-			
+			System.out.println("resize");
+			int[] primeNum = new int[]{10159, 20173, 40583, 86311, 164233, 331523};
 			if (sizeMult == primeNum.length) {
 				System.out.println("Maximum size reached");
 				System.exit(0);
@@ -139,5 +139,4 @@ public class HashTable_OA extends DataCounter {
 			}
 		};
 	}
-
 }
