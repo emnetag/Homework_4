@@ -117,25 +117,26 @@ public class HashTable_OA extends DataCounter {
 	@Override
 	public SimpleIterator getIterator() {
 		return new SimpleIterator(){
-			int startIndex = -1;
+			int startIndex = 0;
 			int elementsOut = 0;
 			@Override
 			public DataCount next() {
 				if (!this.hasNext()) {
 					throw new NoSuchElementException();
 				}
-				startIndex++;
 				while(stringTable[startIndex] == null) {
 					startIndex++;
 				}
 				DataCount temp = stringTable[startIndex];
+				startIndex++;
 				elementsOut++;
 				return temp;
 			}
 
 			@Override
 			public boolean hasNext() {
-				return elementsOut < numOfUnique;
+				// TODO Auto-generated method stub
+				return startIndex < stringTable.length && (elementsOut < numOfUnique);
 			}
 		};
 	}
