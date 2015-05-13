@@ -58,7 +58,6 @@ public class HashTable_SC extends DataCounter {
 	public void incCount(String data) {
 		if (numOfUnique / stringTable.length > 1.5) {
 			int[] primeNum = new int[]{164233, 331523};
-			
 			if (sizeMult == primeNum.length) {
 				System.out.println("Maximum size reached");
 				System.exit(0);
