@@ -80,9 +80,24 @@ public class HashTable_OA extends DataCounter {
 		insert(data, stringTable);
 	}
 	
+	@Override
+	public int getSize() {
+		return numOfUnique;
+	}
+
+	@Override
+	public int getCount(String data) {
+		int index = stringHash.hash(data) % stringTable.length;
+		if (stringTable[index] == null) {
+			return 0;
+		} else {
+			return stringTable[index].count;
+		}
+	}
+	
 	private int insert(String data, DataCount[] arr) {
 		int index = stringHash.hash(data) % arr.length;
-	
+
 		if(arr[index] == null) {
 			arr[index] = new DataCount(data, 1);
 			numOfUnique++;
@@ -97,52 +112,32 @@ public class HashTable_OA extends DataCounter {
 			numOfUnique++;
 		}
 		return index;
-		
-	}
-	
-	
-	@Override
-	public int getSize() {
-		return numOfUnique;
-	}
-
-	@Override
-	public int getCount(String data) {
-		int index = stringHash.hash(data) % stringTable.length;
-		if (stringTable[index] == null) {
-			return 0;
-		} else { 
-			return stringTable[index].count;
-		} 
 	}
 
 	@Override
 	public SimpleIterator getIterator() {
 		return new SimpleIterator(){
-			int startIndex = 0;
+			int startIndex = -1;
 			int elementsOut = 0;
 			@Override
 			public DataCount next() {
 				if (!this.hasNext()) {
 					throw new NoSuchElementException();
 				}
+				startIndex++;
 				while(stringTable[startIndex] == null) {
 					startIndex++;
 				}
 				DataCount temp = stringTable[startIndex];
-				startIndex++;
 				elementsOut++;
 				return temp;
 			}
 
 			@Override
 			public boolean hasNext() {
-				// TODO Auto-generated method stub
-				return startIndex < stringTable.length && (elementsOut < numOfUnique);
+				return elementsOut < numOfUnique;
 			}
-			
 		};
-	
 	}
 
 }

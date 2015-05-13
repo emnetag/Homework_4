@@ -15,7 +15,7 @@ public class WordCount {
 	// TODO: Replace this comment with your own as appropriate.
 	// Implement a method that returns an array of DataCount objects
 	// containing each unique word.
-	private static DataCount[] getCountsArray(DataCounter counter) {
+	public static DataCount[] getCountsArray(DataCounter counter) {
 		DataCount[] dCount = new DataCount[counter.getSize()];
 		int i = 0;
 		SimpleIterator itr = counter.getIterator();
@@ -30,7 +30,7 @@ public class WordCount {
 	// /////////////// DO NOT MODIFY ALL THE METHODS BELOW ///////////////////
 	// ////////////////////////////////////////////////////////////////////////
 
-	private static void countWords(String file, DataCounter counter) {
+	public static void countWords(String file, DataCounter counter) {
 		try {
 			FileWordReader reader = new FileWordReader(file);
 			String word = reader.nextWord();
@@ -45,7 +45,7 @@ public class WordCount {
 	}
 
 	// IMPORTANT: Used for grading. Do not modify the printing *format*!
-	private static void printDataCount(DataCount[] counts) {
+	public static void printDataCount(DataCount[] counts) {
 		for (DataCount c : counts) {
 			System.out.println(c.count + "\t" + c.data);
 		}
@@ -61,7 +61,7 @@ public class WordCount {
 	 * 
 	 * @param comparator for comparing elements.
 	 */
-	private static <E> void insertionSort(E[] array, Comparator<E> comparator) {
+	public static <E> void insertionSort(E[] array, Comparator<E> comparator) {
 		for (int i = 1; i < array.length; i++) {
 			E x = array[i];
 			int j;
@@ -78,7 +78,7 @@ public class WordCount {
 	/*
 	 * Print error message and exit
 	 */
-	private static void usage() {
+	public static void usage() {
 		System.err
 				.println("Usage: [-s | -o] <filename of document to analyze>");
 		System.err.println("-s for hashtable with separate chaining");
