@@ -57,7 +57,7 @@ public class HashTable_OA extends DataCounter {
 
 	@Override
 	public void incCount(String data) {
-		if (numOfUnique / stringTable.length > 1) {
+		if (numOfUnique / stringTable.length > 0.5) {
 			int[] primeNum = new int[]{164233, 331523};
 			
 			if (sizeMult == primeNum.length) {

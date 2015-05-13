@@ -56,7 +56,7 @@ public class HashTable_SC extends DataCounter {
 
 	@Override
 	public void incCount(String data) {
-		if (numOfUnique / stringTable.length > 1) {
+		if (numOfUnique / stringTable.length > 1.5) {
 			int[] primeNum = new int[]{164233, 331523};
 			
 			if (sizeMult == primeNum.length) {
@@ -72,6 +72,7 @@ public class HashTable_SC extends DataCounter {
 					NodeObj curr = stringTable[i];
 					while (curr != null) {
 						insert(curr, arrTemp);
+						curr = curr.next;
 					}
 				}		
 			}
@@ -82,6 +83,7 @@ public class HashTable_SC extends DataCounter {
 	
 	private void insert(NodeObj aNode, NodeObj[] arr) {
 		int index = stringHash.hash(aNode.dataCount.data) % arr.length;
+
 		boolean added = false;
 		
 		if (arr[index] == null) {
@@ -99,14 +101,11 @@ public class HashTable_SC extends DataCounter {
 			}
 			if (stringComp.compare(curr.dataCount.data, aNode.dataCount.data) == 0 && !added) {
 				curr.dataCount.count++;
-			} else{
+			} else if (stringComp.compare(curr.dataCount.data, aNode.dataCount.data) != 0 && !added){
 				curr.next = aNode;
 				numOfUnique++;
 			}
 		}
-		System.out.println(aNode.dataCount.data);
-		System.out.println(stringTable[index].dataCount.count);
-		System.out.println(numOfUnique);
 	}
 	
 	
@@ -169,11 +168,9 @@ public class HashTable_SC extends DataCounter {
 				if (!this.hasNext()) {
 					throw new NoSuchElementException();
 				}
-				if( pointer == null || pointer.next == null) {
+				if(pointer == null) {
 					index++;
-					System.out.println("uniqueele = " + numOfUnique);
-					System.out.println("elements out = "+ elementsOut);
-					System.out.println(index);
+
 					while(stringTable[index] == null) {
 						index++;
 					}
