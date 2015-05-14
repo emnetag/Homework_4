@@ -57,9 +57,10 @@ public class Correlator {
 		}
 		
 		int textLength1 = countWords(args[1], counter1);
-		System.out.println(textLength1);
+		//System.out.println(textLength1);
 		int textLength2 = countWords(args[2], counter2);
-		System.out.println(textLength2);
+		//System.out.println(textLength2);
+
 
 		SimpleIterator itr = counter1.getIterator();
 		
@@ -69,7 +70,7 @@ public class Correlator {
 			int count2 = counter2.getCount(dCount.data);
 
 			double freq1 = ((double)dCount.count) / textLength1;
-
+			
 			double freq2 = ((double) count2) / textLength2;
 			
 			if (checkFreq(freq1) && checkFreq(freq2)) {

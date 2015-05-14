@@ -58,7 +58,6 @@ public class HashTable_OA extends DataCounter {
 	@Override
 	public void incCount(String data) {
 		if (numOfUnique / stringTable.length > 0.5) {
-			System.out.println("resizing");
 			int[] primeNum = new int[]{10159, 20173, 40583, 86311, 164233, 331523};
 			if (sizeMult == primeNum.length) {
 				System.out.println("Maximum size reached");
@@ -71,14 +70,42 @@ public class HashTable_OA extends DataCounter {
 			for(int i = 0; i < stringTable.length; i++) {
 				if(stringTable[i] != null) {
 					DataCount dCount = stringTable[i];
-				    int index = insert(dCount.data, temp);
-//				    System.out.println(dCount.count);
-					temp[index].count = dCount.count;
+					insert(dCount, temp);
+				
 				}
 			}
 			stringTable = temp;
 		}
-		insert(data, stringTable);
+		insert(new DataCount(data, 1), stringTable);
+	}
+	
+	private void insert(DataCount dCount, DataCount[] arr) {
+		int index = stringHash.hash(dCount.data) % arr.length;
+		boolean added = false; 
+	
+
+		if(arr[index] == null) {
+			arr[index] = dCount;
+			numOfUnique++;
+		} else if(stringComp.compare(arr[index].data, dCount.data) == 0) {
+
+			arr[index].count++;
+		} else {
+			int i = index;
+			while(arr[i] != null) {
+				if(stringComp.compare(arr[i].data, dCount.data) == 0) {
+					arr[i].count++;
+					added = true;
+					break;
+				} else {
+					i = (i + 1) % arr.length;
+				}
+			}
+			if(!added) {
+				arr[i] = dCount;
+				numOfUnique++;
+			}
+		}
 	}
 	
 	
@@ -88,52 +115,24 @@ public class HashTable_OA extends DataCounter {
 	}
 
 	@Override
+	
 	public int getCount(String data) {
 		int index = stringHash.hash(data) % stringTable.length;
 		if (stringTable[index] == null) {
 			return 0;
-		} else {
+		} else if(stringComp.compare(stringTable[index].data, data) == 0) {
 			return stringTable[index].count;
-		}
-	}
-	/*
-	private void insert(DataCount dCount, DataCount[] arr) {
-		int index = stringHash.hash(dCount.data) % arr.length;
-
-		if(arr[index] == null) {
-			arr[index] = dCount;
-			numOfUnique++;
-		} else if(stringComp.compare(arr[index].data, dCount.data) == 0) {
-			arr[index].count = dCount.count;
-			arr[index].count++;
 		} else {
 			int i = index;
-			while(arr[i] != null) {
-				i = (i + 1) % arr.length;
+			while(stringTable[i] != null) {
+				if(stringComp.compare(stringTable[i].data, data) == 0) {
+					return stringTable[i].count;
+				} else {
+					i = (i + 1) % stringTable.length;
+				}
 			}
-			arr[i] = dCount;
-			numOfUnique++;
+			return 0;
 		}
-		
-	}*/
-	
-	private int insert(String data, DataCount[] arr) {
-		int index = stringHash.hash(data) % arr.length;
-
-		if(arr[index] == null) {
-			arr[index] = new DataCount(data, 1);
-			numOfUnique++;
-		} else if(stringComp.compare(arr[index].data, data) == 0) {
-			arr[index].count++;
-		} else {
-			int i = index;
-			while(arr[i] != null) {
-				i = (i + 1) % arr.length;
-			}
-			arr[i] = new DataCount(data, 1);
-			numOfUnique++;
-		}
-		return index;
 	}
 
 	@Override
@@ -157,8 +156,7 @@ public class HashTable_OA extends DataCounter {
 
 			@Override
 			public boolean hasNext() {
-				// TODO Auto-generated method stub
-				return startIndex < stringTable.length && (elementsOut < numOfUnique);
+				return (startIndex < stringTable.length) && elementsOut < numOfUnique;
 			}
 		};
 	}

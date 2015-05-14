@@ -2,8 +2,6 @@ package shake_n_bacon;
 
 import java.io.IOException;
 
-import javax.management.monitor.CounterMonitor;
-
 import providedCode.*;
 
 /**

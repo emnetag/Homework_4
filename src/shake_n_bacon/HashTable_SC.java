@@ -49,7 +49,7 @@ public class HashTable_SC extends DataCounter {
 	public HashTable_SC(Comparator<String> c, Hasher h) {
 		stringComp = c;
 		stringHash = h;
-		stringTable = new NodeObj[5347]; // 5347
+		stringTable = new NodeObj[86311]; // 5347
 		numOfUnique = 0;
 		sizeMult = 0;
 	}
