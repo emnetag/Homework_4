@@ -14,47 +14,41 @@ import providedCode.*;
  * @email emnetg@uw.edu
  * @email jonanv@uw.edu
  * 
- *        TODO: Replace this comment with your own as appropriate.
+ *  A hash table that stores words and their counts. This implementation
+ *  handles collisions using separate chaining.
  * 
- *        1. You may implement HashTable with separate chaining discussed in
- *        class; the only restriction is that it should not restrict the size of
- *        the input domain (i.e., it must accept any key) or the number of
- *        inputs (i.e., it must grow as necessary).
- * 
- *        2. Your HashTable should rehash as appropriate (use load factor as
- *        shown in the class).
- * 
- *        3. To use your HashTable for WordCount, you will need to be able to
- *        hash strings. Implement your own hashing strategy using charAt and
- *        length. Do NOT use Java's hashCode method.
- * 
- *        4. HashTable should be able to grow at least up to 200,000. We are not
- *        going to test input size over 200,000 so you can stop resizing there
- *        (of course, you can make it grow even larger but it is not necessary).
- * 
- *        5. We suggest you to hard code the prime numbers. You can use this
- *        list: http://primes.utm.edu/lists/small/100000.txt NOTE: Make sure you
- *        only hard code the prime numbers that are going to be used. Do NOT
- *        copy the whole list!
- * 
- *        TODO: Develop appropriate tests for your HashTable.
  */
 public class HashTable_SC extends DataCounter {
+	// compares two strings
 	private Comparator<String> stringComp;
+	
+	// hash function that returns the hash value of the given string
 	private Hasher stringHash;
+	
+	// array to store each word and its count
 	private NodeObj[] stringTable; 
+	
+	// size multiplier for increasing hash table size
 	private int sizeMult;
+	
+	// number of unique words in the hash table
 	private int numOfUnique;
 	
+	// constructs a new table of node objects with an initial size of 86311
+	// and a size multiplier of 0;
 	public HashTable_SC(Comparator<String> c, Hasher h) {
 		stringComp = c;
 		stringHash = h;
-		stringTable = new NodeObj[86311]; // 5347
+		stringTable = new NodeObj[86311]; 
 		numOfUnique = 0;
 		sizeMult = 0;
 	}
 
-	@Override
+	// if the word already exists in the table, increment the count. Otherwise
+	// creates a new node object and inserts it into the table. If the load factor
+	// is greater than 1.5, the new table size will be the value of the primeNum array
+	// at index of sizeMult. all node objects in the old array will be rehashed into the new
+	// table.
 	public void incCount(String data) {
 		if (numOfUnique / stringTable.length > 1.5) {
 			System.out.println("resize");
@@ -81,6 +75,9 @@ public class HashTable_SC extends DataCounter {
 		insert(new NodeObj(data), stringTable);
 	}
 	
+	// inserts a node object into the hash table. If the word associated with the object
+	// already exists the count is incremented. if two words hash to the same index and that word doesn't
+	// exist a new node is added at the end of the list at that index.
 	private void insert(NodeObj aNode, NodeObj[] arr) {
 		int index = stringHash.hash(aNode.dataCount.data) % arr.length;
 
@@ -108,37 +105,13 @@ public class HashTable_SC extends DataCounter {
 		}
 	}
 	
-	
-//	private int insert(String data, NodeObj[] arr) {
-//		int index = stringHash.hash(data) % arr.length;
-//		
-//		if (arr[index] == null) {
-//			arr[index] = new NodeObj(data);
-//			numOfUnique++;
-//		} else {
-//			NodeObj curr = arr[index];
-//			while (curr != null) {
-//				if (stringComp.compare(curr.dataCount.data, data) == 0) {
-//					curr.dataCount.count++;
-//					return index;
-//				}
-//				curr = curr.next;
-//			}
-//			
-//			NodeObj temp = new NodeObj(data);
-//			temp.next = arr[index];
-//			arr[index] = temp;
-//			numOfUnique++;
-//		}
-//		return index;
-//	}
-
-	@Override
+	// returns the number of unique words in the hash table
 	public int getSize() {
 		return numOfUnique;
 	}
 
-	@Override
+	// returns the count of the given word in the table. if the word is not
+	// found, 0 is returned. 
 	public int getCount(String data) {
 		int index = stringHash.hash(data) % stringTable.length;
 		
@@ -156,14 +129,17 @@ public class HashTable_SC extends DataCounter {
 		}
 	}
 
-	@Override
+	// returns a SimpleIterator that can iterate over the hash table
 	public SimpleIterator getIterator() {
 		return new SimpleIterator() {
+			// number of elements iterated over by the iterator
 			int elementsOut = 0;
+			
+			// the current index of the table that the iterator is on
 			int index = 0;
 			NodeObj pointer = stringTable[0]; 
 
-			@Override
+			// returns the next dataCount object in the hash table
 			public DataCount next() {
 				if (!this.hasNext()) {
 					throw new NoSuchElementException();
@@ -183,23 +159,25 @@ public class HashTable_SC extends DataCounter {
 				return temp.dataCount;
 			}
 
-			@Override
+			// returns true if there are more DataCount objects left to be iterated over
 			public boolean hasNext() {
 				return (index < stringTable.length) && (elementsOut < numOfUnique);
 			}
 		};
 	}
 	
-	
-	public class NodeObj {
-		public NodeObj next;
-		public DataCount dataCount;
+	// inner class for node object to handle collisions by using separate chaining
+	private class NodeObj {
+		public NodeObj next; // reference to the next node in the chain
+		public DataCount dataCount; // DataCount object 
 		
+		// constructs an empty node 
 		public NodeObj() {
 			this.dataCount = null;
 			this.next = null;
 		}
 		
+		// constructs a node object with a given word and a count of 1
 		public NodeObj(String data) {
 			this.dataCount = new DataCount(data, 1);
 			this.next = null;
