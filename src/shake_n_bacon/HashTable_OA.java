@@ -58,7 +58,7 @@ public class HashTable_OA extends DataCounter {
 	@Override
 	public void incCount(String data) {
 		if (numOfUnique / stringTable.length > 0.5) {
-			System.out.println("resize");
+			System.out.println("resizing");
 			int[] primeNum = new int[]{10159, 20173, 40583, 86311, 164233, 331523};
 			if (sizeMult == primeNum.length) {
 				System.out.println("Maximum size reached");
@@ -72,6 +72,7 @@ public class HashTable_OA extends DataCounter {
 				if(stringTable[i] != null) {
 					DataCount dCount = stringTable[i];
 				    int index = insert(dCount.data, temp);
+//				    System.out.println(dCount.count);
 					temp[index].count = dCount.count;
 				}
 			}
@@ -79,6 +80,7 @@ public class HashTable_OA extends DataCounter {
 		}
 		insert(data, stringTable);
 	}
+	
 	
 	@Override
 	public int getSize() {
@@ -94,6 +96,26 @@ public class HashTable_OA extends DataCounter {
 			return stringTable[index].count;
 		}
 	}
+	/*
+	private void insert(DataCount dCount, DataCount[] arr) {
+		int index = stringHash.hash(dCount.data) % arr.length;
+
+		if(arr[index] == null) {
+			arr[index] = dCount;
+			numOfUnique++;
+		} else if(stringComp.compare(arr[index].data, dCount.data) == 0) {
+			arr[index].count = dCount.count;
+			arr[index].count++;
+		} else {
+			int i = index;
+			while(arr[i] != null) {
+				i = (i + 1) % arr.length;
+			}
+			arr[i] = dCount;
+			numOfUnique++;
+		}
+		
+	}*/
 	
 	private int insert(String data, DataCount[] arr) {
 		int index = stringHash.hash(data) % arr.length;

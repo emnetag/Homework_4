@@ -57,8 +57,10 @@ public class Correlator {
 		}
 		
 		int textLength1 = countWords(args[1], counter1);
+		System.out.println(textLength1);
 		int textLength2 = countWords(args[2], counter2);
-		
+		System.out.println(textLength2);
+
 		SimpleIterator itr = counter1.getIterator();
 		
 		while (itr.hasNext()) {
@@ -91,13 +93,13 @@ public class Correlator {
 		try {
 			FileWordReader reader = new FileWordReader(file);
 			String word = reader.nextWord();
-			int numOfWords = 0;
+			int totalWords = 0;
 			while (word != null) {
-				numOfWords++;
+				totalWords++;
 				counter.incCount(word);
 				word = reader.nextWord();
 			}
-			return numOfWords;
+			return totalWords;
 		} catch (IOException e) {
 			System.err.println("Error processing " + file + " " + e);
 			System.exit(1);

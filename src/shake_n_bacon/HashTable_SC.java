@@ -187,7 +187,6 @@ public class HashTable_SC extends DataCounter {
 			public boolean hasNext() {
 				return (index < stringTable.length) && (elementsOut < numOfUnique);
 			}
-			
 		};
 	}
 	
