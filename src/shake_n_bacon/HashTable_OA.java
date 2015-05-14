@@ -58,7 +58,6 @@ public class HashTable_OA extends DataCounter {
 	@Override
 	public void incCount(String data) {
 		if (numOfUnique / stringTable.length > 0.5) {
-			System.out.println("resize");
 			int[] primeNum = new int[]{10159, 20173, 40583, 86311, 164233, 331523};
 			if (sizeMult == primeNum.length) {
 				System.out.println("Maximum size reached");
@@ -71,32 +70,43 @@ public class HashTable_OA extends DataCounter {
 			for(int i = 0; i < stringTable.length; i++) {
 				if(stringTable[i] != null) {
 					DataCount dCount = stringTable[i];
-				    int index = insert(dCount.data, temp);
-					temp[index].count = dCount.count;
+					insert(dCount, temp);
+				
 				}
 			}
 			stringTable = temp;
 		}
-		insert(data, stringTable);
+		insert(new DataCount(data, 1), stringTable);
 	}
 	
-	private int insert(String data, DataCount[] arr) {
-		int index = stringHash.hash(data) % arr.length;
+	private void insert(DataCount dCount, DataCount[] arr) {
+		int index = stringHash.hash(dCount.data) % arr.length;
+		boolean added = false; 
 	
 		if(arr[index] == null) {
-			arr[index] = new DataCount(data, 1);
+			arr[index] = dCount;
 			numOfUnique++;
-		} else if(stringComp.compare(arr[index].data, data) == 0) {
+		} else if(stringComp.compare(arr[index].data, dCount.data) == 0) {
+
 			arr[index].count++;
 		} else {
 			int i = index;
 			while(arr[i] != null) {
-				i = (i + 1) % arr.length;
+				if(stringComp.compare(arr[i].data, dCount.data) == 0) {
+					arr[i].count++;
+					added = true;
+					break;
+				} else {
+					i = (i + 1) % arr.length;
+				}
 			}
-			arr[i] = new DataCount(data, 1);
-			numOfUnique++;
+			if(!added) {
+				arr[i] = dCount;
+				numOfUnique++;
+			}
+			
+			
 		}
-		return index;
 		
 	}
 	
@@ -126,8 +136,10 @@ public class HashTable_OA extends DataCounter {
 				if (!this.hasNext()) {
 					throw new NoSuchElementException();
 				}
+		
 				while(stringTable[startIndex] == null) {
 					startIndex++;
+					
 				}
 				DataCount temp = stringTable[startIndex];
 				startIndex++;
@@ -137,8 +149,7 @@ public class HashTable_OA extends DataCounter {
 
 			@Override
 			public boolean hasNext() {
-				// TODO Auto-generated method stub
-				return startIndex < stringTable.length && (elementsOut < numOfUnique);
+				return (startIndex < stringTable.length) && elementsOut < numOfUnique;
 			}
 		};
 	}
