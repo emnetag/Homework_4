@@ -14,34 +14,23 @@ import providedCode.*;
  * @email emnetg@uw.edu
  * @email jonanv@uw.edu
  * 
- *        TODO: REPLACE this comment with your own as appropriate.
+ * Correlator.java computes a metric to determine the similarities in word
+ * frequencies between two text files. The variance is calculated by taking 
+ * the sum of the squares of the differences between the normalized frequencies
+ * of words that occur in both texts.
  * 
- *        This should be done using a *SINGLE* iterator. This means only 1
- *        iterator being used in Correlator.java, *NOT* 1 iterator per
- *        DataCounter (You should call dataCounter.getIterator() just once in
- *        Correlator.java). Hint: Take advantage of DataCounter's method.
- * 
- *        Although you can share argument processing code with WordCount, it
- *        will be easier to copy & paste it from WordCount and modify it here -
- *        it is up to you. Since WordCount does not have states, making private
- *        method public to share with Correlator is OK. In general, you are not
- *        forbidden to make private method public, just make sure it does not
- *        violate style guidelines.
- * 
- *        Make sure WordCount and Correlator do not print anything other than
- *        what they are supposed to print (e.g. do not print timing info, input
- *        size). To avoid this, copy these files into package writeupExperiment
- *        and change it there as needed for your write-up experiments.
  */
 public class Correlator {
 
 	public static void main(String[] args) {
-		// TODO: Compute this variance
+
 		double variance = 0.0;
 		
 		String firstArg = args[0].toLowerCase();
+		
 		DataCounter counter1 = null;
 		DataCounter counter2 = null;
+		
 		if (firstArg.equals("-s")) {
 			counter1 = new HashTable_SC(new StringComparator(),
 						new StringHasher());
@@ -57,10 +46,7 @@ public class Correlator {
 		}
 		
 		int textLength1 = countWords(args[1], counter1);
-		//System.out.println(textLength1);
 		int textLength2 = countWords(args[2], counter2);
-		//System.out.println(textLength2);
-
 
 		SimpleIterator itr = counter1.getIterator();
 		
@@ -77,11 +63,11 @@ public class Correlator {
 				variance += (freq2 - freq1) * (freq2 - freq1);
 			}
 		}
-		
-		// IMPORTANT: Do not change printing format. Just print the double.
 		System.out.println(variance);
 	}
 	
+	
+	// prints a message indicating the proper syntax of using this class
 	public static void usage() {
 		System.err
 				.println("Usage: [-s | -o] <filename1> <filename2>");
@@ -90,6 +76,10 @@ public class Correlator {
 		System.exit(1);
 	}
 	
+	// takes in a file name and a DataCounter object
+	// reads words from the string file and inserts them into the DataCounter object
+	// and returns the total number of words that occur in the file
+	// if the specified filepath is invalid, an error will be printed
 	public static int countWords(String file, DataCounter counter) {
 		try {
 			FileWordReader reader = new FileWordReader(file);
@@ -108,6 +98,8 @@ public class Correlator {
 		return 0;
 	}
 	
+	// takes in a double and checks if the value is not zero 
+	// and below 1% and above 0.01%
 	public static boolean checkFreq(double frequency) {
 		return frequency >= 0.0001 && 0.01 >= frequency && frequency != 0;
 	}

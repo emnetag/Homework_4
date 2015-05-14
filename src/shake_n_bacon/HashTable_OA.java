@@ -14,39 +14,29 @@ import providedCode.*;
  * @email emnetg@uw.edu
  * @email jonanv@uw.edu
  * 
- *        TODO: Replace this comment with your own as appropriate.
- * 
- *        1. You may implement HashTable with open addressing discussed in
- *        class; You can choose one of those three: linear probing, quadratic
- *        probing or double hashing. The only restriction is that it should not
- *        restrict the size of the input domain (i.e., it must accept any key)
- *        or the number of inputs (i.e., it must grow as necessary).
- * 
- *        2. Your HashTable should rehash as appropriate (use load factor as
- *        shown in the class).
- * 
- *        3. To use your HashTable for WordCount, you will need to be able to
- *        hash strings. Implement your own hashing strategy using charAt and
- *        length. Do NOT use Java's hashCode method.
- * 
- *        4. HashTable should be able to grow at least up to 200,000. We are not
- *        going to test input size over 200,000 so you can stop resizing there
- *        (of course, you can make it grow even larger but it is not necessary).
- * 
- *        5. We suggest you to hard code the prime numbers. You can use this
- *        list: http://primes.utm.edu/lists/small/100000.txt NOTE: Make sure you
- *        only hard code the prime numbers that are going to be used. Do NOT
- *        copy the whole list!
- * 
- *        TODO: Develop appropriate tests for your HashTable.
+ *  A hash table that stores words and their counts; implemented using
+ *  open addressing and linear probing
  */
 public class HashTable_OA extends DataCounter {
+	
+	// used to compare to strings
 	private Comparator<String> stringComp;
+	
+	// hash function that takes in a string and returns a hash value
 	private Hasher stringHash;
+	
+	// stores words and their associated counts
 	private DataCount[] stringTable;
+	
+	// size multiplier for increasing hash table size
 	private int sizeMult;
+	
+	// number of unique words in the hash table
 	private int numOfUnique;
 	
+	
+	// accepts a comparator object and hash function then
+	// initiates a new hash table with an initial table length of 5347
 	public HashTable_OA(Comparator<String> c, Hasher h) {
 		stringComp = c;
 		stringHash = h;
@@ -55,7 +45,10 @@ public class HashTable_OA extends DataCounter {
 		numOfUnique = 0;
 	}
 
-	@Override
+	// increments the count for the word that is passed in 
+	// if the load factor is greater that 0.5, the table is resized to 
+	// a new prime number value and all words are rehashed and inserted into the
+	// new table
 	public void incCount(String data) {
 		if (numOfUnique / stringTable.length > 0.5) {
 			int[] primeNum = new int[]{10159, 20173, 40583, 86311, 164233, 331523};
@@ -79,6 +72,8 @@ public class HashTable_OA extends DataCounter {
 		insert(new DataCount(data, 1), stringTable);
 	}
 	
+	// inserts a given DataCount object into an array and
+	// handles collision by using linear probing
 	private void insert(DataCount dCount, DataCount[] arr) {
 		int index = stringHash.hash(dCount.data) % arr.length;
 		boolean added = false; 
@@ -109,13 +104,12 @@ public class HashTable_OA extends DataCounter {
 	}
 	
 	
-	@Override
+	// returns the number of unique words in the hash table
 	public int getSize() {
 		return numOfUnique;
 	}
 
-	@Override
-	
+	// returns the count of the given word
 	public int getCount(String data) {
 		int index = stringHash.hash(data) % stringTable.length;
 		if (stringTable[index] == null) {
@@ -135,12 +129,16 @@ public class HashTable_OA extends DataCounter {
 		}
 	}
 
-	@Override
+	// returns a SimpleIterator that can iterate over the the hash table
 	public SimpleIterator getIterator() {
 		return new SimpleIterator(){
+			// current index of the hash table that the iterator is on
 			int startIndex = 0;
+			
+			// current number of elements iterator has iterated over 
 			int elementsOut = 0;
-			@Override
+
+			// returns the next DataCount object in the table that is not null
 			public DataCount next() {
 				if (!this.hasNext()) {
 					throw new NoSuchElementException();
@@ -154,7 +152,7 @@ public class HashTable_OA extends DataCounter {
 				return temp;
 			}
 
-			@Override
+			// returns true if there are more DataCount objects left to be iterated over
 			public boolean hasNext() {
 				return (startIndex < stringTable.length) && elementsOut < numOfUnique;
 			}

@@ -10,9 +10,8 @@ import providedCode.*;
  */
 public class WordCount {
 
-	// TODO: Replace this comment with your own as appropriate.
-	// Implement a method that returns an array of DataCount objects
-	// containing each unique word.
+	// takes in a DataCounter object and iterates over its elements 
+	// and inserts them into an array and returns that array
 	public static DataCount[] getCountsArray(DataCounter counter) {
 		DataCount[] dCount = new DataCount[counter.getSize()];
 		int i = 0;
