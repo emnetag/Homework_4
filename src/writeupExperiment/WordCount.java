@@ -110,6 +110,6 @@ public class WordCount {
 		countWords(args[1], counter);
 		DataCount[] counts = getCountsArray(counter);
 		insertionSort(counts, new DataCountStringComparator());
-		printDataCount(counts);
+		//printDataCount(counts);
 	}
 }
