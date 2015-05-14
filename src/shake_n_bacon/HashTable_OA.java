@@ -83,6 +83,7 @@ public class HashTable_OA extends DataCounter {
 		int index = stringHash.hash(dCount.data) % arr.length;
 		boolean added = false; 
 	
+
 		if(arr[index] == null) {
 			arr[index] = dCount;
 			numOfUnique++;
@@ -104,10 +105,7 @@ public class HashTable_OA extends DataCounter {
 				arr[i] = dCount;
 				numOfUnique++;
 			}
-			
-			
 		}
-		
 	}
 	
 	
@@ -117,13 +115,24 @@ public class HashTable_OA extends DataCounter {
 	}
 
 	@Override
+	
 	public int getCount(String data) {
 		int index = stringHash.hash(data) % stringTable.length;
 		if (stringTable[index] == null) {
 			return 0;
-		} else { 
+		} else if(stringComp.compare(stringTable[index].data, data) == 0) {
 			return stringTable[index].count;
-		} 
+		} else {
+			int i = index;
+			while(stringTable[i] != null) {
+				if(stringComp.compare(stringTable[i].data, data) == 0) {
+					return stringTable[i].count;
+				} else {
+					i = (i + 1) % stringTable.length;
+				}
+			}
+			return 0;
+		}
 	}
 
 	@Override
@@ -136,10 +145,8 @@ public class HashTable_OA extends DataCounter {
 				if (!this.hasNext()) {
 					throw new NoSuchElementException();
 				}
-		
 				while(stringTable[startIndex] == null) {
 					startIndex++;
-					
 				}
 				DataCount temp = stringTable[startIndex];
 				startIndex++;
